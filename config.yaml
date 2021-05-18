@@ -1,0 +1,16 @@
+cookie: appmsglist_action_3867627868=card; noticeLoginFlag=1; bizuin=3867627868; data_bizuin=3867627868; data_ticket=PFLdH8KTFoqck8b6MKOBxjvvZZytsXnqlrbHhsNskxk95Bx1C2TTzrpZbl5B30rr; rand_info=CAESIEOUvhYfbfVfHv3Sc0NCJKSjXiotopTwZGpj6g46sJb2; slave_bizuin=3867627868; slave_sid=cjR5b1ZwVXVuazBhTzFFQlAzdXJfZnd6NEZUV3RMM1gwMDFOZUtjcGNpR2hYeHNrRFlKUFhLZXAwVnNzaXBEeEIwVXZWdmtiNTdQU0tSNjhxWFZkUWNaUnB4dWVzeTBLSkg2bVhYeVlVeGg3STEwSkZaUXN3YXQwaHV5SjFqbmZJa1poRjJFa3o1MTZXSUJQ; slave_user=gh_7965c9886787; mm_lang=zh_CN; openid2ticket_oXFGH5iDKzBQ6pWlMAZIsF6qBXTI=iXD2n7GUnvWw2NDeUYL1CNUGU0Ix/lKmVLEzaCDLPk8=; ua_id=lqXoCDauQRRc01ElAAAAAEuEHYrQhDqcrKaUhzPmZQo=; xid=59e6bf9503dca56b80c4229755a51337; cert=SkufR6Y0bp4dkS0y_Cq6eSX5dyxorl3w; ticket=daed2c974f4edc2e3b72d2cdf65753bbbd046e75; ticket_id=gh_7965c9886787; uuid=d1c52d189d4a4f811eb10c34e8478dfe; openid2ticket_oVZO45QSMTUr-9x0qckHrK0W-MGk=x+dX8YI2vOhxAiVK5l9Mq6AZ8O2A7b0xK9xlCwsJJec=; noticeLoginFlag=1; openid2ticket_oTqyJ5Jv6R5pHF7H_84kLKEn-9Bc=PRtHBd4wIcy2dzIjv97kURIfI6SM1sZCeULYcooB6pQ=; wxuin=21222659575098; iip=0; pgv_pvid=1622491694; RK=PTgsGVrrcV; pac_uid=1_271129083
+user_agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_6) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.0.3 Safari/605.1.15
+fakeid: MzAwNDA2OTM1Ng==
+token: 1828920602
+
+pass_ticket: KMTlkka9BxbehdFke42n4Q3uMGA5vDF46aNeP8uumrR+wk1Ts1CsAJaxKKdd56Qs
+appmsg_token: 1113_fMgJUGC31sj%2FVOmtoLL9degi8g11GVkKSFBY_iwS3gC7iA8edj3twQBoNrwXaweH7Z1QxiGQGM5z9bX9
+key: ace2cc80b8518f951c4ff3cb072c138e643bcf4366f523f6a1c1ac84d073e37cdd47360d1bfdfb428daee7cb21c7892f808dc5716f48423223407eb26cea037a060f4606e4d97c5cc835eeb4578095fce123c0df3e2dfcea65e7ba1e17414ff2d118ee3d654cf7f0a4b63c61b3c5329a843c061cfc03f8bd5f02fe91f0f11361
+uin: MTk0NDM5MTcyMw==
+
+
+database: wx_gzh
+user: root
+password: 123456
+host: 127.0.0.1
+port: 13306
