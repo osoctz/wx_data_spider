@@ -14,7 +14,7 @@ config = yaml.safe_load(file_data)
 
 
 def fetch_many():
-    sql = "select * from wx_gzh"
+    sql = "select * from wx_gzh where status=0"
     with UsingMysql() as um:
         um.cursor.execute(sql)
         return um.cursor.fetchall()
@@ -47,7 +47,10 @@ def insert_article(res_list):
                 row['mediaapi_publish_status'],
                 row['title'], row['update_time'])
 
-            um.cursor.execute(sql, param)
+            article = fetch_one(row['aid'])
+            if article is None:
+                um.cursor.execute(sql, param)
+                # print("文章:%s新增" % row['aid'])
 
 
 def get_articles(info):
@@ -73,29 +76,58 @@ def get_articles(info):
     }
 
     i = 0
-    while True:
+    count = 0
+
+    while i < 3:
         begin = i * 5
         params["begin"] = str(begin)
-        time.sleep(random.randint(1, 10))
+        time.sleep(random.randint(5, 15))
         res = requests.get(url, headers=headers, params=params, verify=False)
 
         # 微信流量控制, 退出
         if res.json()['base_resp']['ret'] == 200013:
             print("frequencey control, stop at {}".format(str(begin)))
-            break
+            return False
 
         # 如果返回的内容中为空则结束
-        if len(res.json()['app_msg_list']) == 0:
+        app_list = res.json()['app_msg_list']
+        if len(app_list) == 0:
             print("all article parsed")
-            break
+            return True
 
         # 保存结果为JSON
-        insert_article(res.json()['app_msg_list'])
+        insert_article(app_list)
         print("公众号:%s,%d" % (info['nickname'], len(res.json()['app_msg_list'])))
         i += 1
+        count += len(app_list)
+        # 超过20篇文章则不再获取
+        if count > 15:
+            break
+
+    return True
+
+
+def upd_gzh_proc(fakeid, status):
+    sql = "update wx_gzh set status=%s where fakeid=%s"
+    with UsingMysql() as um:
+        um.cursor.execute(sql, (status, fakeid))
+
+
+def fetch_one(aid):
+    sql = "select * from wx_gzh_article where aid=%s"
+    with UsingMysql() as um:
+        um.cursor.execute(sql, (aid))
+        return um.cursor.fetchone()
 
 
 if __name__ == '__main__':
-
     for info in fetch_many():
-        get_articles(info)
+        if get_articles(info):
+            upd_gzh_proc(info['fakeid'], 1)
+        else:
+            break
+
+    # print(fetch_one('2650826424_3') != None)
+    # article = fetch_one('2650826424_3')
+    # if article is not None:
+    #     print(article)
