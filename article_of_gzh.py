@@ -81,7 +81,7 @@ def get_articles(info):
     while i < 3:
         begin = i * 5
         params["begin"] = str(begin)
-        time.sleep(random.randint(5, 15))
+        time.sleep(random.randint(10, 15))
         res = requests.get(url, headers=headers, params=params, verify=False)
 
         # 微信流量控制, 退出
@@ -90,19 +90,22 @@ def get_articles(info):
             return False
 
         # 如果返回的内容中为空则结束
-        app_list = res.json()['app_msg_list']
-        if len(app_list) == 0:
-            print("all article parsed")
-            return True
+        if 'app_msg_list' in res.json():
+            app_list = res.json()['app_msg_list']
+            if len(app_list) == 0:
+                print("all article parsed")
+                return True
 
-        # 保存结果为JSON
-        insert_article(app_list)
-        print("公众号:%s,%d" % (info['nickname'], len(res.json()['app_msg_list'])))
+            # 保存结果为JSON
+            insert_article(app_list)
+            print("公众号:%s,%d" % (info['nickname'], len(res.json()['app_msg_list'])))
+            count += len(app_list)
+            # 超过20篇文章则不再获取
+            if count > 15:
+                break
+        else:
+            print("公众号:%s,响应:%s" % (info['nickname'],res.json()))
         i += 1
-        count += len(app_list)
-        # 超过20篇文章则不再获取
-        if count > 15:
-            break
 
     return True
 
