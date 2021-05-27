@@ -28,3 +28,5 @@ python3 video_image.py
 以上限流时限过后重新请求需更换token&cookie
 
 爬取文章阅读量和点赞数必须提前用代理工具如charles获取pass_ticket&appmsg_token&key三个参数，目前1～5秒请求一次，30次左右触发流控
+
+ps: 以上仅满足可用并非最优，且仅供学习用途。
