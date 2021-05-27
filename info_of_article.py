@@ -19,10 +19,10 @@ def get_num(aid, link):
     url_obj = urlparse(link)
     qs = parse_qs(url_obj.query)
 
-    mid = qs['mid']
-    idx = qs['idx']
-    sn = qs['sn']
-    __biz = qs['__biz']
+    mid = qs['mid'][0]
+    idx = qs['idx'][0]
+    sn = qs['sn'][0]
+    __biz = qs['__biz'][0]
     pass_ticket = config['pass_ticket']
     appmsg_token = config['appmsg_token']
     key = config['key']
@@ -49,7 +49,8 @@ def get_num(aid, link):
         "pass_ticket": pass_ticket,
         "appmsg_token": appmsg_token,
         "uin": uin,
-        "wxtoken": '777'
+        "wxtoken": '777',
+        "f": "json"
     }
 
     app_url = "https://mp.weixin.qq.com/mp/getappmsgext"
@@ -71,7 +72,7 @@ def upd_article_proc(aid, status):
 
 
 def get_article():
-    sql = "select * from wx_gzh_article where status=0"
+    sql = "select * from wx_gzh_article where status=0 order by fake_id"
     with UsingMysql() as um:
         um.cursor.execute(sql)
         return um.cursor.fetchall()
@@ -96,5 +97,9 @@ if __name__ == '__main__':
     article_list = get_article()
     print(len(article_list))
     for article in article_list:
+        print(article['link'])
         get_num(article['aid'], article['link'])
         time.sleep(random.randint(1, 5))
+
+        # http://mp.weixin.qq.com/s?__biz=Mzg2MTQ3MTcyNg==&mid=2247483656&idx=1&sn=b2d3fbb4ae8da9b38a026572f20b2ef2&chksm=ce17d789f9605e9f8ab6bd81dcccacf3cda02794c77f8761cbf3187037385cd6bc4e6cf16267#rd
+    # get_num("","http://mp.weixin.qq.com/s?__biz=Mzg2MTQ3MTcyNg==&mid=2247483656&idx=1&sn=b2d3fbb4ae8da9b38a026572f20b2ef2&chksm=ce17d789f9605e9f8ab6bd81dcccacf3cda02794c77f8761cbf3187037385cd6bc4e6cf16267#rd")

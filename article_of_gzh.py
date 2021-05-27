@@ -20,8 +20,9 @@ def fetch_many():
         return um.cursor.fetchall()
 
 
-def insert_article(res_list):
+def insert_article(fake_id,res_list):
     sql = "insert into wx_gzh_article(aid," \
+          "fake_id," \
           "album_id," \
           "appmsgid," \
           "checking," \
@@ -37,11 +38,11 @@ def insert_article(res_list):
           "media_duration," \
           "mediaapi_publish_status," \
           "title," \
-          "update_time) values(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
+          "update_time) values(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
     with UsingMysql() as um:
         for row in res_list:
             param = (
-                row['aid'], row['album_id'], row['appmsgid'], row['checking'], row['copyright_type'],
+                row['aid'], fake_id, row['album_id'], row['appmsgid'], row['checking'], row['copyright_type'],
                 row['cover'], row['create_time'], row['digest'], row['has_red_packet_cover'], row['is_pay_subscribe'],
                 row['item_show_type'], row['itemidx'], row['link'], row['media_duration'],
                 row['mediaapi_publish_status'],
@@ -97,7 +98,7 @@ def get_articles(info):
                 return True
 
             # 保存结果为JSON
-            insert_article(app_list)
+            insert_article(info['fakeid'],app_list)
             print("公众号:%s,%d" % (info['nickname'], len(res.json()['app_msg_list'])))
             count += len(app_list)
             # 超过20篇文章则不再获取
