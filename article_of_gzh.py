@@ -20,7 +20,7 @@ def fetch_many():
         return um.cursor.fetchall()
 
 
-def insert_article(fake_id,res_list):
+def insert_article(fake_id, res_list):
     sql = "insert into wx_gzh_article(aid," \
           "fake_id," \
           "album_id," \
@@ -67,7 +67,7 @@ def get_articles(info):
     params = {
         "action": "list_ex",
         "begin": begin,
-        "count": "5",
+        "count": "16",
         "fakeid": info['fakeid'],
         "type": "9",
         "token": config['token'],
@@ -80,10 +80,11 @@ def get_articles(info):
     count = 0
 
     while i < 3:
-        begin = i * 5
-        params["begin"] = str(begin)
-        time.sleep(random.randint(10, 15))
+
+        begin = i * 16
+
         res = requests.get(url, headers=headers, params=params, verify=False)
+        params["begin"] = str(begin)
 
         # 微信流量控制, 退出
         if res.json()['base_resp']['ret'] == 200013:
@@ -98,15 +99,17 @@ def get_articles(info):
                 return True
 
             # 保存结果为JSON
-            insert_article(info['fakeid'],app_list)
-            print("公众号:%s,%d" % (info['nickname'], len(res.json()['app_msg_list'])))
+            insert_article(info['fakeid'], app_list)
+            print("公众号:%s,%d" % (info['nickname'], len(app_list)))
             count += len(app_list)
             # 超过20篇文章则不再获取
             if count > 15:
                 break
         else:
-            print("公众号:%s,响应:%s" % (info['nickname'],res.json()))
+            print("公众号:%s,响应:%s" % (info['nickname'], res.json()))
+            break
         i += 1
+        time.sleep(random.randint(120, 122))
 
     return True
 
