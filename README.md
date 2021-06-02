@@ -20,7 +20,12 @@ python3 info_of_article.py
 ```
 python3 video_image.py
 ```
-## 说明
+## change log
+
+## 2021-6-2 update
+
+1.根据文章的update_time 过滤增量获取t+1的文章
+2.2分钟请求一次，248个公众号文章爬取不需要更换cookie和token
 
 ## 2021-5-22 update
 
