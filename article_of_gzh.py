@@ -1,29 +1,24 @@
 import random
 import time
-import datetime
-
+import log
 import requests
 import urllib3
-import yaml
 
+from producter.gzh_article_producter import product_article
 from pymysql_comm import UsingMysql
 
 urllib3.disable_warnings()
-config_dir = os.path.dirname(os.path.realpath(__file__))
-config_file = config_dir + os.sep + "config.yaml"
-with open(config_file, 'r') as file:
-    file_data = file.read()
-config = yaml.safe_load(file_data)
 
-
-def fetch_many():
-    sql = "select * from wx_gzh where status=0"
-    with UsingMysql() as um:
-        um.cursor.execute(sql)
-        return um.cursor.fetchall()
+USER_AGENT = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_6) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.0.3 Safari/605.1.15'
 
 
 def insert_article(fake_id, row):
+    """
+    文章->db
+    :param fake_id:
+    :param row:
+    :return:
+    """
     sql = "insert into wx_gzh_article(aid," \
           "fake_id," \
           "album_id," \
@@ -57,7 +52,19 @@ def insert_article(fake_id, row):
             # print("文章:%s新增" % row['aid'])
 
 
-def get_articles(_info, _date):
+def fetch_one(aid):
+    """
+
+    :param aid:
+    :return:
+    """
+    sql = "select * from wx_gzh_article where aid=%s"
+    with UsingMysql() as um:
+        um.cursor.execute(sql, (aid))
+        return um.cursor.fetchone()
+
+
+def get_articles(_info, _details, _date):
     """
     获取文章
     :param _info:
@@ -65,11 +72,10 @@ def get_articles(_info, _date):
     :return:
     """
     headers = {
-        "Cookie": config['cookie'],
-        "User-Agent": config['user_agent']
+        "Cookie": _details['cookie'],
+        "User-Agent": USER_AGENT
     }
 
-    # https://mp.weixin.qq.com/cgi-bin/appmsg?action=list_ex&begin=0&count=5&fakeid=MzAwNDA2OTM1Ng==&type=9&query=&token=867596045&lang=zh_CN&f=json&ajax=1
     # 请求参数
     url = "https://mp.weixin.qq.com/cgi-bin/appmsg"
     begin = "0"
@@ -79,7 +85,7 @@ def get_articles(_info, _date):
         "count": "16",
         "fakeid": _info['fakeid'],
         "type": "9",
-        "token": config['token'],
+        "token": _details['token'],
         "lang": "zh_CN",
         "f": "json",
         "ajax": "1"
@@ -98,14 +104,14 @@ def get_articles(_info, _date):
 
         # 微信流量控制, 退出
         if res.json()['base_resp']['ret'] == 200013:
-            print("frequencey control, stop at {}".format(str(begin)))
+            log.info("frequency control, stop at {}".format(str(begin)))
             return False
 
         # 如果返回的内容中为空则结束
         if 'app_msg_list' in res.json():
             app_list = res.json()['app_msg_list']
             if len(app_list) == 0:
-                print("all article parsed")
+                log.info("all article parsed")
                 return True
 
             for row in app_list:
@@ -120,55 +126,17 @@ def get_articles(_info, _date):
                     break
                 else:
                     insert_article(_info['fakeid'], row)
+                    product_article(row)
                     count += 1
-            print("公众号:%s,%d" % (_info['nickname'], count))
+            log.info("公众号:%s,%d" % (_info['nickname'], count))
             # count += len(app_list)
             # # 超过20篇文章则不再获取
             # if count > 15:
             #     break
         else:
-            print("公众号:%s,响应:%s" % (_info['nickname'], res.json()))
+            log.info("公众号:%s,响应:%s" % (_info['nickname'], res.json()))
             break
         i += 1
-        time.sleep(random.randint(120, 122))
+        time.sleep(random.randint(60, 65))
 
     return True
-
-
-def upd_gzh_proc(fakeid, status):
-    sql = "update wx_gzh set status=%s where fakeid=%s"
-    with UsingMysql() as um:
-        um.cursor.execute(sql, (status, fakeid))
-
-
-def fetch_one(aid):
-    sql = "select * from wx_gzh_article where aid=%s"
-    with UsingMysql() as um:
-        um.cursor.execute(sql, (aid))
-        return um.cursor.fetchone()
-
-
-if __name__ == '__main__':
-
-    start_time = datetime.datetime.now()
-    today = datetime.date.today()  # 今天
-    yesterday = today - datetime.timedelta(days=1)  # 昨天
-
-    # current_date = time.strftime("%Y%m%d", time.localtime(time.time()))
-    yesterday_str = datetime.date.strftime(yesterday, "%Y%m%d")
-    for info in fetch_many():
-        if get_articles(info, yesterday_str):
-            upd_gzh_proc(info['fakeid'], 1)
-        else:
-            break
-    end_time = datetime.datetime.now()
-    print('获取文章总计耗时 %d 秒' % (end_time - start_time).seconds)
-    # print(time.strftime("%Y%m%d", time.localtime(time.time())))
-    # print(time.strftime("%Y%m%d", time.localtime(1611924803)))
-    # print(int('20210602') > int('20210129'))
-    # print(fetch_one('2650826424_3') != None)
-    # article = fetch_one('2650826424_3')
-    # if article is not None:
-    #     print(article)
-
-    #获取文章总计耗时 3521 秒
