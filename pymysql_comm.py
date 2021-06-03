@@ -1,7 +1,11 @@
 import pymysql
 import yaml
+import os
 
-with open('config.yaml', 'r') as file:
+config_dir = os.path.dirname(os.path.realpath(__file__))
+config_file = config_dir + os.sep + "config.yaml"
+
+with open(config_file, 'r') as file:
     file_data = file.read()
 config = yaml.safe_load(file_data)
 
@@ -26,7 +30,6 @@ class UsingMysql(object):
         self._commit = commit
 
     def __enter__(self):
-
         conn = get_connection()
         cursor = conn.cursor(pymysql.cursors.DictCursor)
         conn.autocommit = False
@@ -36,7 +39,6 @@ class UsingMysql(object):
         return self
 
     def __exit__(self, exc_type, exc_val, exc_tb):
-
         if self._commit:
             self._conn.commit()
         self._cursor.close()
