@@ -29,6 +29,12 @@ python3 video_image.py
 
 ## change log
 
+#### 2021-6-3 update
+
+1. 引入redis queue
+
+2. 数据流 生产 gzh -> 公众号队列 -> 消费 gzh, 生产文章 -> 公众号文章队列 -> 消费文章,落地阅读量、下载图片
+
 #### 2021-6-2 update
 
 1.根据文章的update_time 过滤增量获取t+1的文章
