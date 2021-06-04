@@ -40,7 +40,9 @@ def extract_context(link):
         # texts = dom.xpath('// *[ @ id = "js_content"] //section/text()')
         root = dom.xpath('// *[ @ id = "js_content"]')
         # print(link)
-        return root[0].xpath('string(.)')
+        if len(root)>0:
+            return root[0].xpath('string(.)')
+        return ""
 
 
 def download_images(url):
@@ -64,6 +66,10 @@ def download_images(url):
         for image in images:
             image_link = image.attrib.get("data-src")
             fmt = image.attrib.get("data-type")
+
+            if image_link is None:
+                image_link = image.attrib.get("src")
+                fmt = 'png'
 
             url_obj = urlparse(image_link)
             segments = url_obj.path.split('/')
