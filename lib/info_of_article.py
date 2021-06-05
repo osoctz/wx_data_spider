@@ -3,7 +3,7 @@ from urllib.parse import urlparse
 
 import requests
 import urllib3
-import log
+import lib.log as log
 
 from lib.pymysql_comm import UsingMysql
 

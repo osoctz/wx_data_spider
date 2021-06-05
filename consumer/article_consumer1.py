@@ -1,23 +1,24 @@
 import json
+import os
 import re
-import time
 import urllib.request
-
-import yaml
-from lxml import etree
 from urllib.parse import parse_qs
 from urllib.parse import urlparse
+
 import requests
 import urllib3
+import yaml
+from lxml import etree
 
+from lib import log
 from lib.pymysql_comm import UsingMysql
 from lib.redis_queue import RedisQueue
 
 # 最大视频
 MAX_VIDEO_SIZE = 524288000
 urllib3.disable_warnings()
-config_dir = os.path.dirname(os.path.realpath(__file__))
-config_file = config_dir + os.sep + "../conf/config.yaml"
+current_dir = os.path.dirname(os.path.realpath(__file__))
+config_file = current_dir + os.sep + "../conf/config.yaml"
 with open(config_file, 'r') as file:
     file_data = file.read()
 config = yaml.safe_load(file_data)
@@ -78,7 +79,7 @@ def download_images(url):
             segments = url_obj.path.split('/')
             filename = segments[len(segments) - 2]
 
-            local_path = "output/images/" + filename + "." + fmt
+            local_path = current_dir + os.sep + "../output/images/" + filename + "." + fmt
             image_links.append((image_link, local_path))
             try:
                 res = requests.get(url=image_link, headers=headers, stream=True, timeout=5)
@@ -88,7 +89,7 @@ def download_images(url):
                             if chunk:
                                 f.write(chunk)
                         f.close()
-            except requests.exceptions.RequestException as e:
+            except Exception as e:
                 print(e)
                 print(image_link)
         return image_links
@@ -134,17 +135,17 @@ def download_video(link):
             res = requests.get(url=url, headers=headers, stream=True, timeout=5)
 
             if res.status_code == 200:
-                print("%s 开始下载视频%s" % (time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()), vid))
-                video_path = "output/videos/" + vid + '.mp4'
+                log.info("开始下载视频%s", vid)
+                video_path = current_dir + os.sep + "../output/videos/" + vid + '.mp4'
                 with open(video_path, 'wb') as f:
                     for chunk in res.iter_content(chunk_size=512):
                         if chunk:
                             f.write(chunk)
                     f.close()
-                print("%s 视频%s下载结束" % (time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()), vid))
+                log.info("视频%s下载结束", vid)
                 return url, video_path
         except requests.exceptions.RequestException as e:
-            print("视频地址" + vid + "无法下载,原因:%s", e)
+            log.error("视频地址" + vid + "无法下载,原因:%s", e)
         # print(e)
     return None
 
@@ -172,9 +173,8 @@ def get_video_url(biz, mid, idx, vid):
     headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:23.0) Gecko/20100101 Firefox/23.0'}
     res = requests.get(url=url, headers=headers, params=params, timeout=5)
 
-    content = res.content.decode()
-    content = json.loads(content)
-    url_info = content.get("url_info")
+    _content = json.loads(res.content.decode())
+    url_info = _content.get("url_info")
     return url_info
 
 

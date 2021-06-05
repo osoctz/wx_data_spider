@@ -1,6 +1,6 @@
 import random
 import time
-import log
+import lib.log as log
 import requests
 import urllib3
 

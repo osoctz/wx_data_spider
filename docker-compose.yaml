@@ -1,0 +1,81 @@
+version: '2.2'
+services:
+#  mysql81:
+#    image: mysql/mysql-server:8.0.23
+#    ports:
+#      - "33306:3306"
+#    environment:
+#      MYSQL_ROOT_PASSWORD: 123456
+#    restart: always
+#    volumes:
+#      - "~/conf/mysql8/conf.d:/etc/mysql/conf.d"
+#      - "~/conf/mysql8/data:/var/lib/mysql"
+#      - "~/mysql8/init:/docker-entrypoint-initdb.d/"
+#    command: "mysql -u root -p123456;update user set host = '%' where user = 'root';flush privileges;quit;"
+#  redis1:
+#    image: redis:latest
+#    ports:
+#      - "36379:6379"
+#    volumes:
+#      - "~/redis8/data:/data"
+#      - "~/conf/redis8/redis.conf:/etc/redis/redis.conf"
+#    command: "redis-server /etc/redis/redis.conf --appendonly yes"
+  product_details:
+    container_name: product_details
+    image: mp-wx-spider:latest
+    volumes:
+      - "~/data/wx:/app/output"
+      - "~/data/wx/conf:/app/conf"
+      - "~/data/wx/log:/app/log"
+    command: "/bin/bash bin/product_details.sh"
+    networks:
+      - default
+      - app_net
+    external_links:
+      - mysql8
+      - redis
+  product_gzh:
+    container_name: product_gzh
+    image: mp-wx-spider:latest
+    volumes:
+      - "~/data/wx:/app/output"
+      - "~/data/wx/conf:/app/conf"
+      - "~/data/wx/log:/app/log"
+    command: "/bin/bash bin/product_gzh.sh"
+    networks:
+      - default
+      - app_net
+    external_links:
+      - mysql8
+      - redis
+  consume_gzh:
+    container_name: consume_gzh
+    image: mp-wx-spider:latest
+    volumes:
+      - "~/data/wx:/app/output"
+      - "~/data/wx/conf:/app/conf"
+      - "~/data/wx/log:/app/log"
+    command: "/bin/bash bin/consume_gzh.sh"
+    networks:
+      - default
+      - app_net
+    external_links:
+      - mysql8
+      - redis
+  consume_article:
+    container_name: consume_article
+    image: mp-wx-spider:latest
+    volumes:
+      - "~/data/wx:/app/output"
+      - "~/data/wx/conf:/app/conf"
+      - "~/data/wx/log:/app/log"
+    command: "/bin/bash bin/consume_article.sh"
+    networks:
+      - default
+      - app_net
+    external_links:
+      - mysql8
+      - redis
+networks:
+  app_net:
+    external: true

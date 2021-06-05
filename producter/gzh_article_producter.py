@@ -1,6 +1,7 @@
 from lib.redis_queue import RedisQueue
 import json
 import yaml
+import os
 
 config_dir = os.path.dirname(os.path.realpath(__file__))
 config_file = config_dir + os.sep + "../conf/config.yaml"

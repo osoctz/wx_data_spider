@@ -6,6 +6,6 @@ COPY build/ /app
 WORKDIR /app
 
 ENV PYTHONPATH /app
-RUN pip install -r requirements.txt && chmod +x bin/*.sh
+RUN pip install -r requirements.txt -i https://mirrors.aliyun.com/pypi/simple/ && chmod +x bin/*.sh
 
 # CMD ["sh","-c","bin/run.sh"]

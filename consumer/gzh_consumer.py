@@ -2,6 +2,7 @@ import datetime
 import json
 import yaml
 import urllib3
+import os
 
 from lib import article_of_gzh as aog, log
 from lib.redis_queue import RedisQueue
