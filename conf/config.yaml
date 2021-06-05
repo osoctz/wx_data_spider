@@ -3,8 +3,13 @@ user_agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_6) AppleWebKit/605.1.15
 database: wx_gzh
 user: root
 password: 123456
-host: 127.0.0.1
+host: 192.168.79.154
 port: 13306
+
+redis:
+  host: 127.0.0.1
+  port: 6379
+  password: 12345678
 
 gzh:
   - cookie: appmsglist_action_3867627868=card; appmsglist_action_3904248928=card; ua_id=e0v5anNitDgWHnogAAAAAJlfQZbKJ0RvGq_7E0ORIgE=; mm_lang=zh_CN; openid2ticket_oYBy26Ek11iwDYRdAnXqU_gKkbE0=; pgv_pvid=3438636068; tvfe_boss_uuid=8eb4d4d07509fdff; uuid=d8272af40f18817ceae1182d95680755; rand_info=CAESIFWhgEkqI49SBSFPfw87V4yt6M15IzD/QSLVgRGEpt7f; slave_bizuin=3867627868; data_bizuin=3867627868; bizuin=3867627868; data_ticket=JlW4Kq3bNXoYxPUEUrtnPLmCU8Z+B7YOWZtHkTMFg6GkKE1uw0+IkWEy3VJsTKty; slave_sid=N2xVdnFtSE81aFdPUjNYWDNvUEFKNVBNTkNQc0JISXo0RjZjbE1QWWJxc1doMkRkUERZSzE1ZkNKNzhLZ25VYXRJOGFvUmlXNEt3dE4zdFI3OGREbXhjYThGMkNnUExaYllKOVdPUXptenE3OHFXUnBxQlA3VnYzbTR2WEdycDJCQVIxNERnN3Q1SEZ4b3Y4; slave_user=gh_7965c9886787; xid=cd0ee4e1bbc5709a2bc75c46b20f04cc; rewardsn=; wxtokenkey=777

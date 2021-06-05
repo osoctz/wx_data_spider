@@ -2,7 +2,7 @@ import logging
 import os
 
 log_dir = os.path.dirname(os.path.realpath(__file__))
-log_file = log_dir + os.sep + "log/log.log"
+log_file = log_dir + os.sep + "../log/log.log"
 
 LOG_FORMAT = "%(asctime)s %(name)s %(levelname)s %(message)s "
 DATE_FORMAT = '%Y-%m-%d  %H:%M:%S %a '

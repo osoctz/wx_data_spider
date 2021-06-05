@@ -1,22 +1,26 @@
 import datetime
 import json
-
+import yaml
 import urllib3
 
-import article_of_gzh as aog
-import log
-from redis_queue import RedisQueue
+from lib import article_of_gzh as aog, log
+from lib.redis_queue import RedisQueue
 
 USER_AGENT = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_6) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.0.3 Safari/605.1.15'
 
 urllib3.disable_warnings()
+config_dir = os.path.dirname(os.path.realpath(__file__))
+config_file = config_dir + os.sep + "../conf/config.yaml"
+with open(config_file, 'r') as file:
+    file_data = file.read()
+config = yaml.safe_load(file_data)
 
 if __name__ == '__main__':
 
     # 公众号队列
-    gzh_rq = RedisQueue('gzh_rq', password='12345678')
+    gzh_rq = RedisQueue('gzh_rq')
     # 公众号详细参数队列
-    details_rq = RedisQueue('details_rq', password='12345678')
+    details_rq = RedisQueue('details_rq')
 
     start_time = datetime.datetime.now()
     today = datetime.date.today()  # 今天

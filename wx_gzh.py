@@ -5,11 +5,11 @@ import requests
 import urllib3
 import yaml
 
-from pymysql_comm import UsingMysql
+from lib.pymysql_comm import UsingMysql
 
 urllib3.disable_warnings()
 
-with open('config.yaml', 'r') as file:
+with open('conf/config.yaml', 'r') as file:
     file_data = file.read()
 config = yaml.safe_load(file_data)
 

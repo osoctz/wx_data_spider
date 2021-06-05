@@ -1,7 +1,14 @@
-from redis_queue import RedisQueue
+from lib.redis_queue import RedisQueue
 import json
+import yaml
 
-article_rq = RedisQueue('article_rq', password='12345678')
+config_dir = os.path.dirname(os.path.realpath(__file__))
+config_file = config_dir + os.sep + "../conf/config.yaml"
+with open(config_file, 'r') as file:
+    file_data = file.read()
+config = yaml.safe_load(file_data)
+
+article_rq = RedisQueue('article_rq')
 
 
 def product_article(_article):

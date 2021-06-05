@@ -5,7 +5,7 @@ import requests
 import urllib3
 
 from producter.gzh_article_producter import product_article
-from pymysql_comm import UsingMysql
+from lib.pymysql_comm import UsingMysql
 
 urllib3.disable_warnings()
 

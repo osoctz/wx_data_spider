@@ -1,13 +1,27 @@
 # wx_data_spider
 爬取微信公众号数据
 
-![](flow.png)
+![](docs/flow.png)
 
 ## 爬取文章的正文,下载视频、图片
 ```
 python3 video_image.py
 ```
 
+## deploy
+
+```buildoutcfg
+爬取公众号信息入队列
+docker run -d --name=product_details -v ~/data/wx:/app/output -v ~/data/wx/conf:/app/conf -v ~/data/wx/log:/app/log mp-wx-spider /bin/bash bin/product_details.sh
+被爬取公众号信息入队列
+docker run -d --name=product_gzh -v ~/data/wx:/app/output -v ~/data/wx/conf:/app/conf -v ~/data/wx/log:/app/log mp-wx-spider /bin/bash bin/product_gzh.sh
+爬取公众号文章入队列
+docker run -d --name=consume_gzh -v ~/data/wx:/app/output -v ~/data/wx/conf:/app/conf -v ~/data/wx/log:/app/log mp-wx-spider /bin/bash bin/consume_gzh.sh
+爬取文章视频和图片
+docker run -d --name=consume_article -v ~/data/wx:/app/output -v ~/data/wx/conf:/app/conf -v ~/data/wx/log:/app/log mp-wx-spider /bin/bash bin/consume_article.sh
+
+
+```
 ## TODO
 
 1.1分钟频率测试

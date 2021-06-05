@@ -1,4 +1,4 @@
-from pymysql_comm import UsingMysql
+from lib.pymysql_comm import UsingMysql
 
 
 def fetch_all():

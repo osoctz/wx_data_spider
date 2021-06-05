@@ -3,7 +3,7 @@ import yaml
 import os
 
 config_dir = os.path.dirname(os.path.realpath(__file__))
-config_file = config_dir + os.sep + "config.yaml"
+config_file = config_dir + os.sep + "../conf/config.yaml"
 
 with open(config_file, 'r') as file:
     file_data = file.read()

@@ -1,9 +1,28 @@
 import redis
+import os
+import yaml
+
+config_dir = os.path.dirname(os.path.realpath(__file__))
+config_file = config_dir + os.sep + "../conf/config.yaml"
+
+with open(config_file, 'r') as file:
+    file_data = file.read()
+config = yaml.safe_load(file_data)
 
 
 class RedisQueue(object):
     def __init__(self, name, namespace='queue', **redis_kwargs):
         # redis的默认参数为：host='localhost', port=6379, db=0， 其中db为定义redis database的数量
+        redis_cfargs={}
+
+        if 'host' in config['redis']:
+            redis_cfargs['host']=config['redis']['host']
+        if 'port' in config['redis']:
+            redis_cfargs['port']=config['redis']['port']
+        if 'password' in config['redis']:
+            redis_cfargs['password'] = config['redis']['password']
+
+        redis_kwargs.update(redis_cfargs)
         self.__db = redis.Redis(**redis_kwargs)
         self.key = '%s:%s' % (namespace, name)
 

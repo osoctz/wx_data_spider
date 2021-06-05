@@ -5,7 +5,7 @@ import requests
 import urllib3
 import log
 
-from pymysql_comm import UsingMysql
+from lib.pymysql_comm import UsingMysql
 
 urllib3.disable_warnings()
 

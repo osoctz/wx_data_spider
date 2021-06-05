@@ -11,11 +11,14 @@ import requests
 import urllib3
 
 from lib.pymysql_comm import UsingMysql
+from lib.redis_queue import RedisQueue
 
 # 最大视频
 MAX_VIDEO_SIZE = 524288000
 urllib3.disable_warnings()
-with open('conf/config.yaml', 'r') as file:
+config_dir = os.path.dirname(os.path.realpath(__file__))
+config_file = config_dir + os.sep + "../conf/config.yaml"
+with open(config_file, 'r') as file:
     file_data = file.read()
 config = yaml.safe_load(file_data)
 
@@ -40,7 +43,7 @@ def extract_context(link):
         # texts = dom.xpath('// *[ @ id = "js_content"] //section/text()')
         root = dom.xpath('// *[ @ id = "js_content"]')
         # print(link)
-        if len(root)>0:
+        if len(root) > 0:
             return root[0].xpath('string(.)')
         return ""
 
@@ -175,58 +178,51 @@ def get_video_url(biz, mid, idx, vid):
     return url_info
 
 
-def get_article():
-    sql = "select * from wx_gzh_article where status=0 order by fake_id"
-    with UsingMysql() as um:
-        um.cursor.execute(sql)
-        return um.cursor.fetchall()
-
-
-def save_article_content(aid, content):
+def save_article_content(aid, _content):
     sql = "insert into wx_gzh_article_content(aid,content) values(%s,%s)"
     with UsingMysql() as um:
-        param = (aid, content)
+        param = (aid, _content)
         um.cursor.execute(sql, param)
 
 
-def save_article_image(aid, images):
+def save_article_image(aid, _images):
     sql = "insert into wx_gzh_article_image(aid,origin_image_link,image) values(%s,%s,%s)"
     with UsingMysql() as um:
-        for img in images:
+        for img in _images:
             param = (aid, img[0], img[1])
             um.cursor.execute(sql, param)
 
 
-def save_article_video(aid, video):
+def save_article_video(aid, _video):
     sql = "insert into wx_gzh_article_video(aid,origin_video_link,video) values(%s,%s,%s)"
     with UsingMysql() as um:
-        param = (aid, video[0], video[1])
+        param = (aid, _video[0], _video[1])
         um.cursor.execute(sql, param)
-
-
-def upd_article_proc(aid, status):
-    sql = "update wx_gzh_article set status=%s where aid=%s"
-    with UsingMysql() as um:
-        um.cursor.execute(sql, (status, aid))
 
 
 if __name__ == '__main__':
 
-    article_list = get_article()
-    for article in article_list:
+    _article_rq = RedisQueue('article_rq')
+
+    # 文章
+    while 1:
+        _article = _article_rq.get_wait()
+        if not _article:
+            break
+
+        article_obj = json.loads(_article[1])
         # 正文
-        content = extract_context(article['link'])
-        save_article_content(article['aid'], content.strip())
-        print("%s 正文获取结束" % article['title'])
+        content = extract_context(article_obj['link'])
+        save_article_content(article_obj['aid'], content.strip())
+        # print("%s 正文获取结束" % article['title'])
         # 图片
-        images = download_images(article['link'])
-        print("%s 图片获取结束" % article['title'])
+        images = download_images(article_obj['link'])
+        # print("%s 图片获取结束" % article['title'])
         if len(images) > 0:
-            save_article_image(article['aid'], images)
+            save_article_image(article_obj['aid'], images)
         # 视频
-        video = download_video(article['link'])
-        print("%s 视频获取结束" % article['title'])
+        video = download_video(article_obj['link'])
+        # print("%s 视频获取结束" % article['title'])
         if video is not None:
-            save_article_video(article['aid'], video)
-        upd_article_proc(article['aid'], 1)
-    # download_video(article_url)
+            save_article_video(article_obj['aid'], video)
+        # upd_article_proc(article['aid'], 1)

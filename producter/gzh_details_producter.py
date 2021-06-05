@@ -1,18 +1,18 @@
-from redis_queue import RedisQueue
+from lib.redis_queue import RedisQueue
 import os
 import time
 import json
-import log
+from lib import log
 import yaml
 
-q = RedisQueue('details_rq', password='12345678')
-details_info_rq = RedisQueue('details_info_rq', password='12345678')
 config_dir = os.path.dirname(os.path.realpath(__file__))
-config_file = config_dir + os.sep + "../config.yaml"
-
+config_file = config_dir + os.sep + "../conf/config.yaml"
 with open(config_file, 'r') as file:
     file_data = file.read()
 config = yaml.safe_load(file_data)
+
+q = RedisQueue('details_rq')
+details_info_rq = RedisQueue('details_info_rq')
 
 
 def product_details():

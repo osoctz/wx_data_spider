@@ -1,14 +1,14 @@
 import random
 import time
 
-from redis_queue import RedisQueue
-import info_of_article as ioa
+from lib.redis_queue import RedisQueue
+from lib import info_of_article as ioa
 import json
 
 if __name__ == '__main__':
-    _article_rq = RedisQueue('article_rq', password='12345678')
+    _article_rq = RedisQueue('article_rq')
     # 公众号详细参数队列
-    _details_info_rq = RedisQueue('details_info_rq', password='12345678')
+    _details_info_rq = RedisQueue('details_info_rq')
     # 文章
     while 1:
         _article = _article_rq.get_wait()
