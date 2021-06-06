@@ -24,9 +24,7 @@ docker run -d --name=consume_article -v ~/data/wx:/app/output -v ~/data/wx/conf:
 ```
 ## TODO
 
-1.1分钟频率测试
-
-2.加入队列，并行
+爬取公众号token失效推送更换消息到固定公众号，通知更换
 
 ## change log
 
