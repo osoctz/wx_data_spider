@@ -107,6 +107,10 @@ def get_articles(_info, _details, _date):
             log.info("frequency control, stop at {}".format(str(begin)))
             return False
 
+        if res.json()['base_resp']['ret'] == 200003:
+            log.info("invalid session, stop at {}".format(str(begin)))
+            return False
+
         # 如果返回的内容中为空则结束
         if 'app_msg_list' in res.json():
             app_list = res.json()['app_msg_list']
@@ -129,10 +133,6 @@ def get_articles(_info, _details, _date):
                     product_article(row)
                     count += 1
             log.info("公众号:%s,%d" % (_info['nickname'], count))
-            # count += len(app_list)
-            # # 超过20篇文章则不再获取
-            # if count > 15:
-            #     break
         else:
             log.info("公众号:%s,响应:%s" % (_info['nickname'], res.json()))
             break

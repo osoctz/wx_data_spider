@@ -29,13 +29,19 @@ if __name__ == '__main__':
 
     yesterday_str = datetime.date.strftime(yesterday, "%Y%m%d")
     # 公众号
+    gzh = gzh_rq.get_wait()
     while 1:
-        gzh = gzh_rq.get_wait()
+
+        # 为空则阻塞直到从队列中拿到公众号
         if not gzh:
-            break
+            gzh = gzh_rq.get_wait()
 
         gzh_obj = json.loads(gzh[1])
         details_obj = json.loads(details_rq.get_wait()[1])
 
-        aog.get_articles(gzh_obj, details_obj, yesterday_str)
+        has_next = aog.get_articles(gzh_obj, details_obj, yesterday_str)
+
+        # 如果处理成功则更新下次处理到公众号
+        if has_next:
+            gzh = gzh_rq.get_wait()
         log.info("公众号: {} 处理完毕".format(gzh_obj['nickname']))
