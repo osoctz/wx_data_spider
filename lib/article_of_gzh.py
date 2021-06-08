@@ -1,15 +1,14 @@
-import random
 import time
-import lib.log as log
+
 import requests
 import urllib3
 
-from producter.gzh_article_producter import product_article
+import lib.log as log
+from lib import spider_config
 from lib.pymysql_comm import UsingMysql
+from producter.gzh_article import product_article
 
 urllib3.disable_warnings()
-
-USER_AGENT = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_6) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.0.3 Safari/605.1.15'
 
 
 def insert_article(fake_id, row):
@@ -60,20 +59,21 @@ def fetch_one(aid):
     """
     sql = "select * from wx_gzh_article where aid=%s"
     with UsingMysql() as um:
-        um.cursor.execute(sql, (aid))
+        um.cursor.execute(sql, aid)
         return um.cursor.fetchone()
 
 
 def get_articles(_info, _details, _date):
     """
     获取文章
+    :param _details:
     :param _info:
     :param _date:
     :return:
     """
     headers = {
         "Cookie": _details['cookie'],
-        "User-Agent": USER_AGENT
+        "User-Agent": spider_config.get("user_agent")
     }
 
     # 请求参数
@@ -91,12 +91,13 @@ def get_articles(_info, _details, _date):
         "ajax": "1"
     }
 
+    fmt = spider_config.get("common.fmt")
     i = 0
-    count = 0
     next_page = True
 
     while next_page:
 
+        count = 0
         begin = i * 16
 
         res = requests.get(url, headers=headers, params=params, verify=False)
@@ -120,7 +121,7 @@ def get_articles(_info, _details, _date):
 
             for row in app_list:
                 # 判断文章更新时间
-                update_date = time.strftime("%Y%m%d", time.localtime(row['update_time']))
+                update_date = time.strftime(fmt, time.localtime(row['update_time']))
                 if int(update_date) > int(_date):
                     # 获取t+1文章，当天更新文章忽略
                     continue
@@ -137,6 +138,6 @@ def get_articles(_info, _details, _date):
             log.info("公众号:%s,响应:%s" % (_info['nickname'], res.json()))
             break
         i += 1
-        time.sleep(random.randint(60, 65))
+        time.sleep(spider_config.get('common.time.sleep'))
 
     return True

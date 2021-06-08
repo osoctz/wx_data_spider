@@ -91,7 +91,7 @@ def get_gzh():
     data = get_input("input.txt")
 
     headers = {
-        "Cookie": config['cookie'],
+        "Cookie": 'appmsglist_action_3867627868=card; ua_id=0f77YFH7ICMmjMkzAAAAAMmcHVSX7enBXu5LWdDmEzQ=; wxuin=22946322076355; rand_info=CAESIPmQYHInjGhp0sYmqFtENjqcHSxa84dIz5YxNDob/x+5; slave_bizuin=3867627868; data_bizuin=3867627868; bizuin=3867627868; data_ticket=a6o9AMO1A1G0Vp2LMWp6NG0dXj9WDUlhMvNc/NzvLY5KBxty/rydsVNcXczxfsVD; slave_sid=Q1hTSXZ5T1ZKVU1NOUhmSUFxcEIwTEZ3WTB1MTZwQ0lfbTAxU0d4OXIyc3V6MVkzQnlmOW5XX1dZSzZtXzI1TkdRc21TVEU1NkE1UnZoVkJnN2VQa25XZlpHamFKd3hUNlBGRHBOWEVSNWxaRFlIdUxvUEJTM1dvZ3lzMktrYjFnQ1dFaUtKSWVRTm9TMU12; slave_user=gh_7965c9886787; xid=ce146304269baa6835159eadfc1fd27a; mm_lang=zh_CN; sig_login=h015d149ff4b76ef18d39849caf6c18bc56bfc4eeaa2f60bcfe28e9b44ff0316ab2ad9e2b378d7f436e; pgv_info=ssid=s6186439936; pgv_pvid=1224720304; sig=h0128ca6069cf4601a11a01f991f930382afad90ab8aeec41ae139f4471f352c62c092e7fc37df14840',
         "User-Agent": config['user_agent']
     }
 
@@ -106,7 +106,7 @@ def get_gzh():
                 "count": "5",
                 "scene": "1",
                 "query": d,
-                "token": config['token'],
+                "token": '320681747',
                 "lang": "zh_CN",
                 "f": "json",
                 "ajax": "1"

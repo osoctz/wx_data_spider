@@ -2,14 +2,6 @@ from lib.redis_queue import RedisQueue
 from lib import gzh, log
 import time
 import json
-import yaml
-import os
-
-config_dir = os.path.dirname(os.path.realpath(__file__))
-config_file = config_dir + os.sep + "../conf/config.yaml"
-with open(config_file, 'r') as file:
-    file_data = file.read()
-config = yaml.safe_load(file_data)
 
 gzh_rq = RedisQueue('gzh_rq')  # 新建队列名为rq
 

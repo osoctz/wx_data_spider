@@ -3,6 +3,9 @@ import shutil
 
 if __name__ == '__main__':
 
+    if not os.path.exists("~/data/wx"):
+        os.makedirs("~/data/wx", exist_ok=True)
+
     if not os.path.exists("build"):
         os.mkdir("build")
     else:
@@ -22,3 +25,6 @@ if __name__ == '__main__':
 
     cmd = 'docker build -t mp-wx-spider .'
     os.popen(cmd).read()
+
+    # cmd = 'docker network create wx_app_net'
+    # os.popen(cmd).read()

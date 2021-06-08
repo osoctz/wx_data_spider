@@ -1,3 +1,3 @@
 #!/usr/bin/env sh
 
-python3 consumer/article_consumer1.py
+python3 consumer/article_content.py

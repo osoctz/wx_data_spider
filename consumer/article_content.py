@@ -1,3 +1,6 @@
+"""
+文章->文章一些指标，比如阅读量、点赞量
+"""
 import json
 import os
 import re
@@ -7,10 +10,9 @@ from urllib.parse import urlparse
 
 import requests
 import urllib3
-import yaml
 from lxml import etree
 
-from lib import log
+from lib import log, spider_config
 from lib.pymysql_comm import UsingMysql
 from lib.redis_queue import RedisQueue
 
@@ -18,10 +20,6 @@ from lib.redis_queue import RedisQueue
 MAX_VIDEO_SIZE = 524288000
 urllib3.disable_warnings()
 current_dir = os.path.dirname(os.path.realpath(__file__))
-config_file = current_dir + os.sep + "../conf/config.yaml"
-with open(config_file, 'r') as file:
-    file_data = file.read()
-config = yaml.safe_load(file_data)
 
 
 def extract_context(link):
@@ -32,7 +30,7 @@ def extract_context(link):
     """
     headers = {
         # "Cookie": config['cookie'],
-        "User-Agent": config['user_agent']
+        "User-Agent": spider_config.get('user_agent')
     }
 
     req = urllib.request.Request(url=link, headers=headers)
@@ -57,7 +55,7 @@ def download_images(url):
     """
     headers = {
         # "Cookie": config['cookie'],
-        "User-Agent": config['user_agent']
+        "User-Agent": spider_config.get('user_agent')
     }
 
     req = urllib.request.Request(url=url, headers=headers)
@@ -130,7 +128,7 @@ def download_video(link):
 
             headers = {
                 # "Cookie": _cookie,
-                "User-Agent": config['user_agent']
+                "User-Agent": spider_config.get('user_agent')
             }
             res = requests.get(url=url, headers=headers, stream=True, timeout=5)
 
@@ -179,10 +177,19 @@ def get_video_url(biz, mid, idx, vid):
 
 
 def save_article_content(aid, _content):
-    sql = "insert into wx_gzh_article_content(aid,content) values(%s,%s)"
+    article = get_article_content(aid)
+    if article is None:
+        sql = "insert into wx_gzh_article_content(aid,content) values(%s,%s)"
+        with UsingMysql() as um:
+            param = (aid, _content)
+            um.cursor.execute(sql, param)
+
+
+def get_article_content(aid):
+    sql = "select * from wx_gzh_article_content where aid=%s"
     with UsingMysql() as um:
-        param = (aid, _content)
-        um.cursor.execute(sql, param)
+        um.cursor.execute(sql, aid)
+        return um.cursor.fetchone()
 
 
 def save_article_image(aid, _images):
@@ -226,3 +233,5 @@ if __name__ == '__main__':
         if video is not None:
             save_article_video(article_obj['aid'], video)
         # upd_article_proc(article['aid'], 1)
+
+        log.info('文章:%s,处理结束.', article_obj['title'])
