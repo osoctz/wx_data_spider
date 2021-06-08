@@ -8,19 +8,11 @@
 python3 video_image.py
 ```
 
-## deploy
+## 部署
 
 ```buildoutcfg
-爬取公众号信息入队列
-docker run -d --name=product_details -v ~/data/wx:/app/output -v ~/data/wx/conf:/app/conf -v ~/data/wx/log:/app/log mp-wx-spider /bin/bash bin/product_details.sh
-被爬取公众号信息入队列
-docker run -d --name=product_gzh -v ~/data/wx:/app/output -v ~/data/wx/conf:/app/conf -v ~/data/wx/log:/app/log mp-wx-spider /bin/bash bin/product_gzh.sh
-爬取公众号文章入队列
-docker run -d --name=consume_gzh -v ~/data/wx:/app/output -v ~/data/wx/conf:/app/conf -v ~/data/wx/log:/app/log mp-wx-spider /bin/bash bin/consume_gzh.sh
-爬取文章视频和图片
-docker run -d --name=consume_article -v ~/data/wx:/app/output -v ~/data/wx/conf:/app/conf -v ~/data/wx/log:/app/log mp-wx-spider /bin/bash bin/consume_article.sh
-
-
+docker network create wx_app_net
+docker-compose up
 ```
 ## TODO
 
