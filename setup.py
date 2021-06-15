@@ -12,6 +12,15 @@ if __name__ == '__main__':
         shutil.rmtree("build")
         os.mkdir("build")
 
+    if not os.path.exists("build/output/images"):
+        os.makedirs("build/output/images", exist_ok=True)
+
+    if not os.path.exists("build/output/videos"):
+        os.makedirs("build/output/videos", exist_ok=True)
+
+    if not os.path.exists("build/log"):
+        os.makedirs("build/log", exist_ok=True)
+
     shutil.copy("requirements.txt", "build")
     shutil.copy("wx_gzh.py", "build")
 
@@ -19,8 +28,9 @@ if __name__ == '__main__':
     shutil.copytree("bin", "build/bin")
     shutil.copytree("consumer", "build/consumer")
     shutil.copytree("lib", "build/lib")
-    shutil.copytree("log", "build/log")
-    shutil.copytree("output", "build/output")
+    # shutil.copytree("log", "build/log")
+    # shutil.copytree("output", "build/output")
+
     shutil.copytree("producter", "build/producter")
 
     cmd = 'docker build -t mp-wx-spider .'
