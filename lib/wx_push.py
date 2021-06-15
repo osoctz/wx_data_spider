@@ -1,74 +1,83 @@
+import datetime
+
 import requests
 import json
+from lib import spider_config
 
 
 class WxPush:
-    def __init__(self, _config):
-        self.app_id = _config['app_id']
-        self.app_secret = _config['app_secret']
-        self.template_id = _config['template_id']
+
+    def __init__(self):
+        self.app_id = spider_config.get('wx.test.app_id')
+        self.app_secret = spider_config.get('wx.test.app_secret')
+        self.template_id = spider_config.get('wx.test.template_id')
         self.access_token = ''
+        self.expires_in = datetime.datetime.now()
 
     def get_access_token(self, app_id, app_secret):
-        url = 'https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=%s&secret=%s' % (
-        str(app_id), str(app_secret))
-        r = requests.get(url)
-        data = json.loads(r.text)
+
+        now = datetime.datetime.now()
+        if self.expires_in > now:
+            return self.access_token
+
+        token_url = 'https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=%s&secret=%s' % (
+            str(app_id), str(app_secret))
+        token_res = requests.get(token_url)
+        data = json.loads(token_res.text)
 
         self.access_token = data['access_token']
+        self.expires_in = now + datetime.timedelta(seconds=data['expires_in'])
+        # print(data['expires_in'])
         return self.access_token
 
-    def get_user_list(self):
-        if self.access_token == '':
-            self.get_access_token(self.app_id, self.app_secret)
+    def get_openid(self):
+
+        _access_token = self.get_access_token(self.app_id, self.app_secret)
 
         res = requests.get(
-            'https://api.weixin.qq.com/cgi-bin/user/get?access_token=%s&next_openid=' % str(self.access_token))
+            'https://api.weixin.qq.com/cgi-bin/user/get?access_token=%s&next_openid=' % str(_access_token))
         return json.loads(res.text)
 
-    def get_openid(self):
-        """
-        获取所有粉丝的openid
-        """
-        next_openid = ''
-        url_openid = 'https://api.weixin.qq.com/cgi-bin/user/get?access_token=%s&next_openid=%s' % (
-            self.access_token, next_openid)
-        ans = requests.get(url_openid)
-        print(ans.content)
-        open_ids = json.loads(ans.content)['data']['openid']
-        return open_ids
+    def send_wx(self, content):
+
+        _res = self.get_openid()
+        if _res['total'] > 0:
+            open_ids = _res['data']['openid']
+
+            for open_id in open_ids:
+                _message = {
+                    'touser': open_id,
+                    'template_id': self.template_id,
+                    'url': "http://git.metaq.cn",
+                    'data': {
+                        'token': {
+                            'value': content['token'],
+                            'color': '#0000CD'
+                        },
+                        'msg': {
+                            'value': content['msg'],
+                        }
+                    }
+                }
+
+                self._send(_message)
+
+    def _send(self, message):
+
+        _access_token = self.get_access_token(self.app_id, self.app_secret)
+
+        _url = 'https://api.weixin.qq.com/cgi-bin/message/template/send?access_token=%s' % str(_access_token)
+        requests.post(_url, json.dumps(message))
 
 
-if __name__ == '__main__':
-    wechat_config = {
-        'app_id': 'wxfb4d4be01ac36b9b',
-        'app_secret': '6574776536778d0f1cb5f5d55fef153b',
-        'template_id': 'mqgbbAq4a74WcUpW7nFFnkGJLsekKMCrvhuUKSNChMA'
-    }
+# if __name__ == '__main__':
+#     _content = {
+#         "token": "abc",
+#         "msg": 'token失效,请尽快更新'
+#     }
+#
+#     push = WxPush()
+#     push.send_wx(_content)
 
-    wx_push = WxPush(wechat_config)
-    result = wx_push.get_user_list()
-
-    msg = {
-        'touser': 'ow_Jc5yELx768zm-MybjmrpBhxwY',
-        'template_id': 'mqgbbAq4a74WcUpW7nFFnkGJLsekKMCrvhuUKSNChMA',
-        'url': "http://git.metaq.cn",
-        'data': {
-            'token': {
-                'value': 'a',
-                'color': '#0000CD'
-            },
-            'msg': {
-                'value': "eeeee",
-            }
-        }
-    }
-
-    json_data = json.dumps(msg)
-
-    access_token = wx_push.get_access_token(wechat_config['app_id'], wechat_config['app_secret'])
-    print(access_token)
-    url = 'https://api.weixin.qq.com/cgi-bin/message/template/send?access_token=%s' % str(access_token)
-    r = requests.post(url, json_data)
-
-    print(json.loads(r.text))
+    # now = datetime.datetime.now()
+    # print(now - datetime.timedelta(seconds=3600))

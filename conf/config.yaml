@@ -13,13 +13,13 @@ redis:
 
 gzh:
   - cookie: appmsglist_action_3867627868=card; ua_id=0f77YFH7ICMmjMkzAAAAAMmcHVSX7enBXu5LWdDmEzQ=; wxuin=22946322076355; mm_lang=zh_CN; pgv_pvid=1224720304; ptui_loginuin=271129083; uin=o0271129083; skey=@UD5XW0ZVH; RK=0ahsSVraZV; ptcz=3450db86b83b07f25c3e59c4f7fa1800af50160c7846fde4f793b143c0e336d7; uuid=685e76724926001758e544b196cfffcc; rand_info=CAESIOdtIMi2mcRz/ib4n5QRGeHpRXxo7Py4MxDTlM8rKR38; slave_bizuin=3867627868; data_bizuin=3867627868; bizuin=3867627868; data_ticket=btkdrnjGv4ueLjiXVpOeAQlwn66k6ZwVZpV+5E+Na2VjM+B4Y/NddLXAIydJY/Tm; slave_sid=a0JwMnNqN2dIWHI3NjlzelRjZnpKTjJYZVM1a0hYR1JlbVZSR0x3VkJESklrMmhrZnlaQ2xRQk1FVW1jRDBnUGdmWnJkSzE0WGRzUUtQMUZYOXd5VXp0Vjg1aEJFbE1KdlYzZHdfZVZCeEZCWU91STBteEJkS0hjTFhwekVJZ3pEZERleDNNb2JNaDNoanRh; slave_user=gh_7965c9886787; xid=b2d9bcede2f0c15cba8ccaf1119f7130
-    token: 2087719868
+    token: 2087719868_1
     pass_ticket: uFbDbpTA3y8GfkOmSzIbVEUIJ4QS/K3zx8D9UyveLDRFMK09lkQL2yFTTWR4UqmY
     appmsg_token: 1116_HLa7cZcM7Ff8Oh2LsrCqoYvuDc6liRocqoLPobw4iUo0HkoyfdEiWRg2ZhMZ9AOMYY4965L_5usn51tr
     key: 2a159e28084e0fb2657c0b9e650bdc47dde14878de576c6adddcd36ce60bc6cff8be84d2fdce942ba2c0e29edf654d6ffa0ca2ad7339a7eb8be4f7fd9389e89567422286dce47ef9cc8661dae268e14a359b1c2c9461f44cdc625adefe50d910f87526c24e3274f9c87ec5dbe9562b6f97b64ff3ecbfec9d74bf16d6bf9ade4e
     uin: MTk0NDM5MTcyMw==
   - cookie: appmsglist_action_3867627868=card; ua_id=0f77YFH7ICMmjMkzAAAAAMmcHVSX7enBXu5LWdDmEzQ=; wxuin=22946322076355; mm_lang=zh_CN; pgv_pvid=1224720304; ptui_loginuin=271129083; uin=o0271129083; skey=@UD5XW0ZVH; RK=0ahsSVraZV; ptcz=3450db86b83b07f25c3e59c4f7fa1800af50160c7846fde4f793b143c0e336d7; uuid=685e76724926001758e544b196cfffcc; rand_info=CAESIOdtIMi2mcRz/ib4n5QRGeHpRXxo7Py4MxDTlM8rKR38; slave_bizuin=3867627868; data_bizuin=3867627868; bizuin=3867627868; data_ticket=btkdrnjGv4ueLjiXVpOeAQlwn66k6ZwVZpV+5E+Na2VjM+B4Y/NddLXAIydJY/Tm; slave_sid=a0JwMnNqN2dIWHI3NjlzelRjZnpKTjJYZVM1a0hYR1JlbVZSR0x3VkJESklrMmhrZnlaQ2xRQk1FVW1jRDBnUGdmWnJkSzE0WGRzUUtQMUZYOXd5VXp0Vjg1aEJFbE1KdlYzZHdfZVZCeEZCWU91STBteEJkS0hjTFhwekVJZ3pEZERleDNNb2JNaDNoanRh; slave_user=gh_7965c9886787; xid=b2d9bcede2f0c15cba8ccaf1119f7130
-    token: 2087719868
+    token: 2087719868_1
     pass_ticket: uFbDbpTA3y8GfkOmSzIbVEUIJ4QS/K3zx8D9UyveLDRFMK09lkQL2yFTTWR4UqmY
     appmsg_token: 1116_HLa7cZcM7Ff8Oh2LsrCqoYvuDc6liRocqoLPobw4iUo0HkoyfdEiWRg2ZhMZ9AOMYY4965L_5usn51tr
     key: 2a159e28084e0fb2657c0b9e650bdc47dde14878de576c6adddcd36ce60bc6cff8be84d2fdce942ba2c0e29edf654d6ffa0ca2ad7339a7eb8be4f7fd9389e89567422286dce47ef9cc8661dae268e14a359b1c2c9461f44cdc625adefe50d910f87526c24e3274f9c87ec5dbe9562b6f97b64ff3ecbfec9d74bf16d6bf9ade4e
@@ -29,3 +29,9 @@ common:
   fmt: '%Y%m%d'
   time:
     sleep: 60
+
+wx:
+  test:
+    app_id: xxx
+    app_secret: xxx
+    template_id: xxx

@@ -7,6 +7,7 @@ import lib.log as log
 from lib import spider_config
 from lib.pymysql_comm import UsingMysql
 from producter.gzh_article import product_article
+from lib.wx_push import WxPush
 
 urllib3.disable_warnings()
 
@@ -110,6 +111,7 @@ def get_articles(_info, _details, _date):
 
         if res.json()['base_resp']['ret'] == 200003:
             log.info("invalid session, stop at {}".format(str(begin)))
+            _send(_details)
             return False
 
         # 如果返回的内容中为空则结束
@@ -136,8 +138,19 @@ def get_articles(_info, _details, _date):
             log.info("公众号:%s,%d" % (_info['nickname'], count))
         else:
             log.info("公众号:%s,响应:%s" % (_info['nickname'], res.json()))
+            _send(_details)
             break
         i += 1
         time.sleep(spider_config.get('common.time.sleep'))
 
     return True
+
+
+def _send(_details):
+    push = WxPush()
+    _content = {
+        "token": _details['token'],
+        "msg": '爬取公众号配置失效,请尽快更新'
+    }
+    push.send_wx(_content)
+    time.sleep(spider_config.get('common.time.sleep'))
