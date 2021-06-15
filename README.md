@@ -16,9 +16,13 @@ docker-compose up
 ```
 ## TODO
 
-爬取公众号token失效推送更换消息到固定公众号，通知更换
+1.镜像优化
 
 ## change log
+
+#### 2021-6-15 update
+
+1.添加微信模版消息推送
 
 #### 2021-6-3 update
 
