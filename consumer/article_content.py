@@ -1,6 +1,7 @@
 """
 文章->文章一些指标，比如阅读量、点赞量
 """
+import datetime
 import json
 import os
 import re
@@ -47,9 +48,10 @@ def extract_context(link):
         return ""
 
 
-def download_images(url):
+def download_images(url, timestamp):
     """
     下载图片
+    :param timestamp:
     :param url:
     :return:
     """
@@ -77,7 +79,11 @@ def download_images(url):
             segments = url_obj.path.split('/')
             filename = segments[len(segments) - 2]
 
-            local_path = current_dir + os.sep + "../output/images/" + filename + "." + fmt
+            image_dir = current_dir + os.sep + "../output/images/" + timestamp
+            if not os.path.exists(image_dir):
+                os.makedirs(image_dir, exist_ok=True)
+
+            local_path = image_dir + os.sep + filename + "." + fmt
             image_links.append((image_link, local_path))
             try:
                 res = requests.get(url=image_link, headers=headers, stream=True, timeout=5)
@@ -93,9 +99,10 @@ def download_images(url):
         return image_links
 
 
-def download_video(link):
+def download_video(link, timestamp):
     """
     下载视频到本地目录
+    :param timestamp:
     :param link:
     :return:
     """
@@ -134,7 +141,11 @@ def download_video(link):
 
             if res.status_code == 200:
                 log.info("开始下载视频%s", vid)
-                video_path = current_dir + os.sep + "../output/videos/" + vid + '.mp4'
+                video_dir = current_dir + os.sep + "../output/videos/" + timestamp
+                if not os.path.exists(video_dir):
+                    os.makedirs(video_dir, exist_ok=True)
+
+                video_path = video_dir + os.sep + vid + '.mp4'
                 with open(video_path, 'wb') as f:
                     for chunk in res.iter_content(chunk_size=512):
                         if chunk:
@@ -217,18 +228,23 @@ if __name__ == '__main__':
         if not _article:
             break
 
+        today = datetime.date.today()
+        yesterday = today - datetime.timedelta(days=1)
+        fmt = spider_config.get("common.fmt")
+        yesterday_str = datetime.date.strftime(yesterday, fmt)
+
         article_obj = json.loads(_article[1])
         # 正文
         content = extract_context(article_obj['link'])
         save_article_content(article_obj['aid'], content.strip())
         # print("%s 正文获取结束" % article['title'])
         # 图片
-        images = download_images(article_obj['link'])
+        images = download_images(article_obj['link'], yesterday_str)
         # print("%s 图片获取结束" % article['title'])
         if len(images) > 0:
             save_article_image(article_obj['aid'], images)
         # 视频
-        video = download_video(article_obj['link'])
+        video = download_video(article_obj['link'], yesterday_str)
         # print("%s 视频获取结束" % article['title'])
         if video is not None:
             save_article_video(article_obj['aid'], video)
