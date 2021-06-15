@@ -48,7 +48,7 @@ class WxPush:
                 _message = {
                     'touser': open_id,
                     'template_id': self.template_id,
-                    'url': "http://git.metaq.cn",
+                    'url': "https://github.com/osoctz",
                     'data': {
                         'token': {
                             'value': content['token'],
